@@ -1,5 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
+/* REM Sizing => 1rem = 16px */
+
 export const GlobalStyle = createGlobalStyle`
     :root {
         --background: #F0F2F5;
@@ -32,7 +34,6 @@ export const GlobalStyle = createGlobalStyle`
         }
     }
 
-    /* REM Sizing => 1rem = 16px */
     body {
         background-color: var(--background);
         -webkit-font-smoothing: antialiased;
