@@ -4,6 +4,7 @@ import { Container, TransactionTypeContainer, RadioBox } from './styles';
 import closeImg from '../../assets/close.svg';
 import incomeImg from '../../assets/income.svg';
 import outcomeImg from '../../assets/outcome.svg';
+import { api } from '../../services/api';
 
 Modal.setAppElement('#root');
 
@@ -23,6 +24,15 @@ export function NewTransactionModal({
 
     function handleCreateNewTransaction(event: FormEvent) {
         event.preventDefault(); // Previne reloading ao submeter
+
+        const transactionData = {
+            category: transactionCategory,
+            title: transactionTitle,
+            type: transactionType,
+            value: transactionValue,
+        };
+
+        api.post('/transactions', transactionData);
     }
 
     return (
