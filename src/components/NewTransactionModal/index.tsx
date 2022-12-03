@@ -1,10 +1,10 @@
-import { FormEvent, useState } from 'react';
-import Modal from 'react-modal';
+import { FormEvent, useState, useContext } from 'react';
+import { TransactionsContext } from '../../TransactionsContext';
 import { Container, TransactionTypeContainer, RadioBox } from './styles';
+import Modal from 'react-modal';
 import closeImg from '../../assets/close.svg';
 import incomeImg from '../../assets/income.svg';
 import outcomeImg from '../../assets/outcome.svg';
-import { api } from '../../services/api';
 
 Modal.setAppElement('#root');
 
@@ -17,22 +17,28 @@ export function NewTransactionModal({
     isOpen,
     onRequestClose,
 }: NewTransactionModalProps) {
+    const { createTransaction } = useContext(TransactionsContext);
+
     const [transactionCategory, setTransactionCategory] = useState('');
     const [transactionTitle, setTransactionTitle] = useState('');
     const [transactionType, setTransactionType] = useState('deposit');
-    const [transactionValue, setTransactionValue] = useState(0);
+    const [transactionAmount, setTransactionAmount] = useState(0);
 
-    function handleCreateNewTransaction(event: FormEvent) {
+    async function handleCreateNewTransaction(event: FormEvent) {
         event.preventDefault(); // Previne reloading ao submeter
 
-        const transactionData = {
-            category: transactionCategory,
+        await createTransaction({
             title: transactionTitle,
             type: transactionType,
-            value: transactionValue,
-        };
+            amount: transactionAmount,
+            category: transactionCategory,
+        });
 
-        api.post('/transactions', transactionData);
+        setTransactionCategory('');
+        setTransactionTitle('');
+        setTransactionAmount(0);
+        setTransactionType('deposit');
+        onRequestClose();
     }
 
     return (
@@ -62,9 +68,9 @@ export function NewTransactionModal({
                 <input
                     type="number"
                     placeholder="Valor"
-                    value={transactionValue}
+                    value={transactionAmount}
                     onChange={(event) =>
-                        setTransactionValue(Number(event.target.value))
+                        setTransactionAmount(Number(event.target.value))
                     }
                 />
 
